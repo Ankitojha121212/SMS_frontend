@@ -1,6 +1,6 @@
 
 import React, { createContext, useState, useEffect } from 'react';
-import { getCurrentUser, login, logout, signup } from '../services/auth';
+import { getCurrentUser, login, logout, signup, schoolLogin, schoolRegister } from '../services/auth';
 
 export const AuthContext = createContext();
 
@@ -30,13 +30,27 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const loginSchoolUser = async (email, password) => {
+    const data = await schoolLogin(email, password);
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
+    return data;
+  };
+
+  const registerSchoolUser = async (userData) => {
+    const data = await schoolRegister(userData);
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
+    return data;
+  };
+
   const logoutUser = () => {
     logout();
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, loginUser, logoutUser, signupUser }}>
+    <AuthContext.Provider value={{ user, loading, loginUser, logoutUser, signupUser, loginSchoolUser, registerSchoolUser }}>
       {children}
     </AuthContext.Provider>
   );
